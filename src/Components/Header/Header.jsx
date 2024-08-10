@@ -36,8 +36,8 @@ const Header = () => {
       
         </div>
         <ul className="flex flex-row items-center justify-between space-x-2">
-            <li><button className="px-4  py-2 rounded-md  bg-black text-white text-center">Login</button></li>
-            <li><button className="px-4  py-2 rounded-md  bg-black text-white text-center">Register</button></li>
+            <li><button className="px-4  py-2 rounded-md  bg-black text-white text-center"><Link href='/login'>Login</Link></button></li>
+            <li><button className="px-4  py-2 rounded-md  bg-black text-white text-center"><Link href='/register'>Register</Link></button></li>
           </ul>
       </div>
     </div>
