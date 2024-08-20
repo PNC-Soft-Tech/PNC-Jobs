@@ -1,14 +1,17 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { userReducer } from './features/user/userSlice';
 import { api } from './Api/api';
+import { createWrapper } from 'next-redux-wrapper';
 // ...
 
-export const store = configureStore({
+const makeStore = () => configureStore({
   reducer: {
     user: userReducer,
-    requestCallback:requestCallbackReducer,
     [api.reducerPath]: api.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(api.middleware),
 });
+
+
+export const wrapper = createWrapper(makeStore)
