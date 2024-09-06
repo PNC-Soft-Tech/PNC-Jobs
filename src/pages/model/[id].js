@@ -408,14 +408,52 @@ const ModelDetail = () => {
         {/* Display Questions with Marked Answers and Explanations */}
         {isSubmitted && showAnswers && (
           <div>
+            <div className="flex items-center justify-between mt-4">
+              <label className="text-gray-700">
+                Answers per page:
+                <select
+                  value={answersPerPage}
+                  onChange={(e) =>
+                    handleAnswersPerPageChange(Number(e.target.value))
+                  }
+                  className="ml-2 p-2 border border-gray-300 rounded"
+                >
+                  {[1, 2, 3, 5].map((num) => (
+                    <option key={num} value={num}>
+                      {num}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <div className="flex items-center">
+                <button
+                  onClick={handleAnswersPrev}
+                  disabled={answersPage === 1}
+                  className="px-2 py-1 bg-gray-300 rounded hover:bg-gray-400 mr-2"
+                >
+                  Previous
+                </button>
+                <span className="text-gray-700">
+                  Page {answersPage} of {totalAnswersPages}
+                </span>
+                <button
+                  onClick={handleAnswersNext}
+                  disabled={answersPage === totalAnswersPages}
+                  className="px-2 py-1 bg-gray-300 rounded hover:bg-gray-400 ml-2"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
             <ul className="mt-4 space-y-4">
-              {model.questions.map((question, index) => (
+              {currentAnswers.map((question, index) => (
                 <li
                   key={question._id}
                   className="p-4 bg-gray-50 border border-gray-200 rounded shadow-sm"
                 >
                   <h3 className="text-lg font-semibold">
-                    {index + 1}. {question.title}
+                    {index + 1 + (answersPage - 1) * answersPerPage}.{" "}
+                    {question.title}
                   </h3>
 
                   <ul className="pl-4 mt-2 space-y-2">
