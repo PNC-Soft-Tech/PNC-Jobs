@@ -22,6 +22,10 @@ const ContestDetail = () => {
   const [navPage, setNavPage] = useState(1);
   const navItemsPerPage = 10; // Number of question numbers to show per page
 
+  // Pagination for Answers & Explanations
+  const [answersPage, setAnswersPage] = useState(1);
+  const [answersPerPage, setAnswersPerPage] = useState(1);
+
   useEffect(() => {
     if (id) {
       const fetchContest = async () => {
@@ -133,6 +137,29 @@ const ContestDetail = () => {
 
   const handleNavPrev = () => {
     if (navPage > 1) setNavPage(navPage - 1);
+  };
+
+  // Pagination for Answers & Explanations
+  const indexOfLastAnswer = answersPage * answersPerPage;
+  const indexOfFirstAnswer = indexOfLastAnswer - answersPerPage;
+  const currentAnswers = contest?.questions.slice(
+    indexOfFirstAnswer,
+    indexOfLastAnswer
+  );
+  const totalAnswersPages = Math.ceil(contest?.questions.length / answersPerPage);
+
+  const handleAnswersNext = () => {
+    if (answersPage < totalAnswersPages) setAnswersPage(answersPage + 1);
+  };
+
+  const handleAnswersPrev = () => {
+    if (answersPage > 1) setAnswersPage(answersPage - 1);
+  };
+
+  // Handle change in answers per page
+  const handleAnswersPerPageChange = (newAnswersPerPage) => {
+    setAnswersPerPage(newAnswersPerPage);
+    setAnswersPage(1); // Reset to the first page when changing the number of answers per page
   };
 
   if (!contest) {
@@ -275,43 +302,82 @@ const ContestDetail = () => {
 
         {/* Display Questions with Marked Answers and Explanations */}
         {isSubmitted && showAnswers && (
-          <ul className="mt-4 space-y-4">
-            {contest.questions.map((question) => (
-              <li
-                key={question._id}
-                className="p-4 bg-gray-50 border border-gray-200 rounded shadow-sm"
-              >
-                <h3 className="text-lg font-semibold">{question.title}</h3>
+          <div>
+            <div className="flex items-center justify-between mt-4">
+              <label className="text-gray-700">
+                Answers per page:
+                <select
+                  value={answersPerPage}
+                  onChange={(e) =>
+                    handleAnswersPerPageChange(Number(e.target.value))
+                  }
+                  className="ml-2 p-2 border border-gray-300 rounded"
+                >
+                  {[1, 2, 3, 5].map((num) => (
+                    <option key={num} value={num}>
+                      {num}
+                    </option>
+                  ))}
+                </select>
+              </label>
+              <div className="flex items-center">
+                <button
+                  onClick={handleAnswersPrev}
+                  disabled={answersPage === 1}
+                  className="px-2 py-1 bg-gray-300 rounded hover:bg-gray-400 mr-2"
+                >
+                  Previous
+                </button>
+                <span className="text-gray-700">
+                  Page {answersPage} of {totalAnswersPages}
+                </span>
+                <button
+                  onClick={handleAnswersNext}
+                  disabled={answersPage === totalAnswersPages}
+                  className="px-2 py-1 bg-gray-300 rounded hover:bg-gray-400 ml-2"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+            <ul className="mt-4 space-y-4">
+              {currentAnswers.map((question) => (
+                <li
+                  key={question._id}
+                  className="p-4 bg-gray-50 border border-gray-200 rounded shadow-sm"
+                >
+                  <h3 className="text-lg font-semibold">{question.title}</h3>
 
-                <ul className="pl-4 mt-2 space-y-2">
-                  {question.options.map((option) => {
-                    const isCorrect = option.order === question.rightAnswer;
-                    const isSelected =
-                      selectedAnswers[question._id] === option.order;
+                  <ul className="pl-4 mt-2 space-y-2">
+                    {question.options.map((option) => {
+                      const isCorrect = option.order === question.rightAnswer;
+                      const isSelected =
+                        selectedAnswers[question._id] === option.order;
 
-                    return (
-                      <li
-                        key={option._id}
-                        className={`p-2 border rounded ${
-                          isCorrect
-                            ? "bg-green-100 border-green-400"
-                            : isSelected && !isCorrect
-                            ? "bg-red-100 border-red-400"
-                            : "border-gray-200"
-                        }`}
-                      >
-                        {option.order}. {option.title}
-                      </li>
-                    );
-                  })}
-                </ul>
+                      return (
+                        <li
+                          key={option._id}
+                          className={`p-2 border rounded ${
+                            isCorrect
+                              ? "bg-green-100 border-green-400"
+                              : isSelected && !isCorrect
+                              ? "bg-red-100 border-red-400"
+                              : "border-gray-200"
+                          }`}
+                        >
+                          {option.order}. {option.title}
+                        </li>
+                      );
+                    })}
+                  </ul>
 
-                <p className="mt-2 text-sm text-gray-500">
-                  Explanation: {question.explanation}
-                </p>
-              </li>
-            ))}
-          </ul>
+                  <p className="mt-2 text-sm text-gray-500">
+                    Explanation: {question.explanation}
+                  </p>
+                </li>
+              ))}
+            </ul>
+          </div>
         )}
       </div>
 
