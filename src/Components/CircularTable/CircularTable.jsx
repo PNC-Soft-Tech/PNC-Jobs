@@ -6,6 +6,10 @@ import { getAllJobCirculars } from '@/app/APIs/Circulars/Circular'; // Import th
 const CircularTable = () => {
   const [data, setData] = useState([]); // State to hold job circular data
   const [loading, setLoading] = useState(true); // State to handle loading state
+  const [categories, setCategories] = useState([]); // State to hold unique categories
+  const [filteredData, setFilteredData] = useState([]); // State to hold filtered data
+  const [selectedCategory, setSelectedCategory] = useState(''); // Selected category filter
+  const [searchTitle, setSearchTitle] = useState(''); // Title search filter
 
   // Fetch all job circulars from the backend
   const fetchJobCirculars = async () => {
@@ -15,17 +19,32 @@ const CircularTable = () => {
     const mappedData = circulars.map((circular) => ({
       title: circular.title,
       company: circular.company,
-      category: circular.jobCategory, // Assuming jobCategory is a string; adjust if it's an object
+      category: circular.jobCategory.name, // Display category name
       deadline: new Date(circular.deadline).toLocaleDateString(), // Format deadline as needed
       link: circular.link || '#', // Use actual link or placeholder
     }));
+
+    // Extract unique categories for dropdown
+    const uniqueCategories = Array.from(new Set(mappedData.map(item => item.category)));
+    setCategories(uniqueCategories);
     setData(mappedData);
+    setFilteredData(mappedData); // Initially, all data is unfiltered
     setLoading(false); // Set loading state to false after data is fetched
   };
 
   useEffect(() => {
     fetchJobCirculars(); // Fetch job circulars on component mount
   }, []);
+
+  // Filter data based on selected category and title search
+  useEffect(() => {
+    const filtered = data.filter((item) => {
+      const matchesCategory = selectedCategory ? item.category === selectedCategory : true;
+      const matchesTitle = item.title.toLowerCase().includes(searchTitle.toLowerCase());
+      return matchesCategory && matchesTitle;
+    });
+    setFilteredData(filtered);
+  }, [selectedCategory, searchTitle, data]);
 
   const columns = React.useMemo(
     () => [
@@ -36,6 +55,10 @@ const CircularTable = () => {
       {
         Header: 'Company/Institute',
         accessor: 'company',
+      },
+      {
+        Header: 'Category',
+        accessor: 'category',
       },
       {
         Header: 'Deadline',
@@ -72,7 +95,7 @@ const CircularTable = () => {
   } = useTable(
     {
       columns,
-      data,
+      data: filteredData, // Use filtered data for the table
       initialState: { pageIndex: 0 }, // Start at page 0
     },
     useSortBy,
@@ -85,6 +108,32 @@ const CircularTable = () => {
 
   return (
     <div className="p-4 bg-white rounded-lg shadow-md">
+      {/* Filters */}
+      <div className="flex justify-between mb-4">
+        <div className="flex space-x-4">
+          <select
+            className="border p-2 rounded"
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+          >
+            <option value="">All Categories</option>
+            {categories.map((category, index) => (
+              <option key={index} value={category}>
+                {category}
+              </option>
+            ))}
+          </select>
+          <input
+            type="text"
+            placeholder="Search by title..."
+            value={searchTitle}
+            onChange={(e) => setSearchTitle(e.target.value)}
+            className="border p-2 rounded"
+          />
+        </div>
+      </div>
+
+      {/* Table */}
       <table {...getTableProps()} className="min-w-full divide-y divide-gray-200">
         <thead className="bg-gray-50">
           {headerGroups.map((headerGroup) => (
@@ -122,6 +171,7 @@ const CircularTable = () => {
         </tbody>
       </table>
 
+      {/* Pagination */}
       <div className="pagination mt-4">
         <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
           {'<<'}
