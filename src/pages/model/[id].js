@@ -156,7 +156,7 @@ const ModelDetail = () => {
       <div className="p-6 bg-white border border-gray-200 rounded shadow-md">
         <h1 className="text-2xl font-bold">{model.name}</h1>
         <p className="mt-2 text-gray-600">{model.description}</p>
-        <div className="mt-6 space-y-4">
+        <div className="mt-6 flex flex-row space-x-4">
           <button
             onClick={() => setMode("practice")}
             className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 w-full"
