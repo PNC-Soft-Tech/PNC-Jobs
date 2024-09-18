@@ -1,7 +1,22 @@
+import { setUser } from "@/redux/features/user/userSlice";
+import { useAppDispatch, useAppSelector } from "@/redux/hook";
+import { StoreToCookies } from "@/Utils/cookie";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect } from "react";
 
 const Header = () => {
+  const { user, isLoading } = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    console.log('isLoading: ', isLoading)
+    if (!isLoading) {
+      console.log('user: ', user)
+    }
+  }, [user, isLoading])
+  const handleLogoutAction = async () => {
+    StoreToCookies.removeUser();
+    dispatch(setUser(null));
+  }
   return (
     <div className="bg-slate-500">
       <div className="max-w-pnc mx-auto py-4  text-white flex flex-row items-center justify-between">
@@ -36,12 +51,27 @@ const Header = () => {
               <Link href="contact-us">Contact</Link>
             </li>
           </ul>
-      
+
         </div>
         <ul className="flex flex-row items-center justify-between space-x-2">
-            <li><button className="px-4  py-2 rounded-md  bg-black text-white text-center"><Link href='/login'>Login</Link></button></li>
-            <li><button className="px-4  py-2 rounded-md  bg-black text-white text-center"><Link href='/register'>Register</Link></button></li>
-          </ul>
+          {!isLoading && user && user.user ? (
+            <>
+              <li>Welcome <strong>{user.user.fname}</strong></li>
+              <li>
+                <button
+                  className="px-4  py-2 rounded-md  bg-black text-white text-center"
+                  onClick={handleLogoutAction}
+                >Logout</button>
+              </li>
+            </>
+          ) : (
+            <>
+              <li><button className="px-4  py-2 rounded-md  bg-black text-white text-center"><Link href='/login'>Login</Link></button></li>
+              <li><button className="px-4  py-2 rounded-md  bg-black text-white text-center"><Link href='/register'>Register</Link></button></li>
+            </>
+          )}
+
+        </ul>
       </div>
     </div>
   );
