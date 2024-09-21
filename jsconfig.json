@@ -1,7 +1,11 @@
 {
   "compilerOptions": {
+    "jsx": "react",
+    "checkJs": true,
+    "allowJs": true,
     "paths": {
       "@/*": ["./src/*"]
-    }
+    },
+    "types": ["node"],
   }
 }
