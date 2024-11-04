@@ -1,5 +1,7 @@
 // pages/forgot-password.tsx
 
+import { getButtonStyle, getInputStyle, getLabelStyle } from '@/Utils/helper';
+import React from 'react';
 import { useState } from 'react';
 
 const ForgotPassword = () => {
@@ -35,13 +37,13 @@ const ForgotPassword = () => {
         {message && <p className="text-green-500 mb-4">{message}</p>}
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="email" className="block text-gray-600 font-semibold mb-2">
+            <label htmlFor="email" className={getLabelStyle()}>
               Email Address
             </label>
             <input
               type="email"
               id="email"
-              className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+              className={getInputStyle()}
               placeholder="Enter your email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -50,7 +52,7 @@ const ForgotPassword = () => {
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white font-semibold py-3 rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600"
+            className={getButtonStyle()}
           >
             Send Reset Link
           </button>

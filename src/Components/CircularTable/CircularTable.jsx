@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTable, useSortBy, usePagination } from 'react-table';
 import { getAllJobCirculars } from '@/app/APIs/Circulars/Circular'; // Import the API function
+import { getInputStyle } from '@/Utils/helper';
 
 const CircularTable = () => {
   const [data, setData] = useState([]); // State to hold job circular data
@@ -112,7 +113,7 @@ const CircularTable = () => {
       <div className="flex justify-between mb-4">
         <div className="flex space-x-4">
           <select
-            className="border p-2 rounded"
+            className={getInputStyle()}
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
           >
@@ -128,7 +129,7 @@ const CircularTable = () => {
             placeholder="Search by title..."
             value={searchTitle}
             onChange={(e) => setSearchTitle(e.target.value)}
-            className="border p-2 rounded"
+            className={getInputStyle()}
           />
         </div>
       </div>

@@ -1,4 +1,6 @@
+import { getInputStyle, getLabelStyle } from '@/Utils/helper';
 import { useRouter } from 'next/router';
+import React from 'react';
 import { useState } from 'react';
 
 const ResetPassword = () => {
@@ -49,7 +51,7 @@ const ResetPassword = () => {
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
-              <label htmlFor="new-password" className="sr-only">New Password</label>
+              <label htmlFor="new-password" className={getLabelStyle()}>New Password</label>
               <input
                 id="new-password"
                 name="new-password"
@@ -58,11 +60,11 @@ const ResetPassword = () => {
                 onChange={(e) => setNewPassword(e.target.value)}
                 required
                 placeholder="New Password"
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                className={getInputStyle()}
               />
             </div>
             <div>
-              <label htmlFor="confirm-password" className="sr-only">Confirm Password</label>
+              <label htmlFor="confirm-password" className={getLabelStyle()}>Confirm Password</label>
               <input
                 id="confirm-password"
                 name="confirm-password"
@@ -71,7 +73,7 @@ const ResetPassword = () => {
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
                 placeholder="Confirm Password"
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                className={getInputStyle()}
               />
             </div>
           </div>

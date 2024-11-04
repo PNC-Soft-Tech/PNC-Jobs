@@ -1,6 +1,7 @@
 // components/CreateContestForm.js
 import { useState } from "react";
 import { createContest } from "../api/contest";
+import React from "react";
 
 const CreateContestForm = () => {
   const [formData, setFormData] = useState({

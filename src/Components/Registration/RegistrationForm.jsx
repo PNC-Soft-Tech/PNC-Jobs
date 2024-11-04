@@ -3,7 +3,7 @@ import { useRegisterUserMutation } from "@/redux/features/user/apiUser";
 import { setUser } from "@/redux/features/user/userSlice";
 import { useAppDispatch } from "@/redux/hook";
 import { StoreToCookies } from "@/Utils/cookie";
-import { validateEmail } from "@/Utils/helper";
+import { getButtonStyle, getInputStyle, getLabelStyle, validateEmail } from "@/Utils/helper";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 
@@ -114,7 +114,7 @@ const RegistrationForm = () => {
           <div>
             <label
               htmlFor="fullName"
-              className="block text-sm font-medium text-gray-700"
+              className={getLabelStyle()}
             >
               Full Name
             </label>
@@ -122,7 +122,7 @@ const RegistrationForm = () => {
               type="text"
               id="fullName"
               name="fullName"
-              className="mt-1 block w-full rounded-sm border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              className={getInputStyle()}
               value={fname}
               onChange={(e) => set_fname(e.target.value)}
             />
@@ -131,7 +131,7 @@ const RegistrationForm = () => {
           <div>
             <label
               htmlFor="username"
-              className="block text-sm font-medium text-gray-700"
+              className={getLabelStyle()}
             >
               Username
             </label>
@@ -139,7 +139,7 @@ const RegistrationForm = () => {
               type="text"
               id="username"
               name="username"
-              className="mt-1 block w-full rounded-sm border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              className={getInputStyle()}
               value={username}
               onChange={(e) => set_username(e.target.value)}
             />
@@ -148,7 +148,7 @@ const RegistrationForm = () => {
           <div>
             <label
               htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
+              className={getLabelStyle()}
             >
               Email
             </label>
@@ -156,7 +156,7 @@ const RegistrationForm = () => {
               type="email"
               id="email"
               name="email"
-              className="mt-1 block w-full rounded-sm border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              className={getInputStyle()}
               value={email}
               onChange={(e) => set_email(e.target.value)}
             />
@@ -165,7 +165,7 @@ const RegistrationForm = () => {
           <div>
             <label
               htmlFor="institute"
-              className="block text-sm font-medium text-gray-700"
+              className={getLabelStyle()}
             >
               Institute
             </label>
@@ -173,7 +173,7 @@ const RegistrationForm = () => {
               type="text"
               id="institute"
               name="institute"
-              className="mt-1 block w-full rounded-sm border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              className={getInputStyle()}
               value={institude}
               onChange={(e) => set_institude(e.target.value)}
             />
@@ -182,7 +182,7 @@ const RegistrationForm = () => {
           <div>
             <label
               htmlFor="phone"
-              className="block text-sm font-medium text-gray-700"
+              className={getLabelStyle()}
             >
               Phone
             </label>
@@ -190,7 +190,7 @@ const RegistrationForm = () => {
               type="tel"
               id="phone"
               name="phone"
-              className="mt-1 block w-full rounded-sm border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              className={getInputStyle()}
               value={phone}
               onChange={(e) => set_phone(e.target.value)}
             />
@@ -199,14 +199,14 @@ const RegistrationForm = () => {
           <div>
             <label
               htmlFor="division"
-              className="block text-sm font-medium text-gray-700"
+              className={getLabelStyle()}
             >
               Division
             </label>
             <select
               id="division"
               name="division"
-              className="mt-1 block w-full rounded-sm border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              className={getInputStyle()}
               value={division}
               onChange={(e) => set_division(e.target.value)}
             >
@@ -225,14 +225,14 @@ const RegistrationForm = () => {
           <div>
             <label
               htmlFor="gender"
-              className="block text-sm font-medium text-gray-700"
+              className={getLabelStyle()}
             >
               Gender
             </label>
             <select
               id="gender"
               name="gender"
-              className="mt-1 block w-full rounded-sm border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              className={getInputStyle()}
               value={gender}
               onChange={(e) => set_gender(e.target.value)}
             >
@@ -246,14 +246,14 @@ const RegistrationForm = () => {
           <div>
             <label
               htmlFor="bloodGroup"
-              className="block text-sm font-medium text-gray-700"
+              className={getLabelStyle()}
             >
               Blood Group
             </label>
             <select
               id="bloodGroup"
               name="bloodGroup"
-              className="mt-1 block w-full rounded-sm border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              className={getInputStyle()}
               value={bloodGroup}
               onChange={(e) => set_bloodGroup(e.target.value)}
             >
@@ -272,7 +272,7 @@ const RegistrationForm = () => {
           <div>
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
+              className={getLabelStyle()}
             >
               Password
             </label>
@@ -280,7 +280,7 @@ const RegistrationForm = () => {
               type="password"
               id="password"
               name="password"
-              className="mt-1 block w-full rounded-sm border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              className={getInputStyle()}
               value={password}
               onChange={(e) => set_password(e.target.value)}
             />
@@ -289,7 +289,7 @@ const RegistrationForm = () => {
           <div>
             <label
               htmlFor="confirmPassword"
-              className="block text-sm font-medium text-gray-700"
+              className={getLabelStyle()}
             >
               Confirm Password
             </label>
@@ -297,7 +297,7 @@ const RegistrationForm = () => {
               type="password"
               id="confirmPassword"
               name="confirmPassword"
-              className="mt-1 block w-full rounded-sm border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              className={getInputStyle()}
               value={confirmPassword}
               onChange={(e) => set_confirmPassword(e.target.value)}
             />
@@ -306,7 +306,7 @@ const RegistrationForm = () => {
           <div className="md:col-span-2">
             <label
               htmlFor="address"
-              className="block text-sm font-medium text-gray-700"
+              className={getLabelStyle()}
             >
               Address
             </label>
@@ -314,17 +314,17 @@ const RegistrationForm = () => {
               id="address"
               name="address"
               rows="3"
-              className="mt-1 block w-full rounded-sm border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+              className={getInputStyle()}
               value={address}
               onChange={(e) => set_address(e.target.value)}
             ></textarea>
           </div>
         </div>
 
-        <div className="mt-6">
+        <div className="mt-6 text-center">
           <button
             type="submit"
-            className="w-full py-2 px-4 bg-indigo-600 text-white font-semibold rounded-md shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
+            className={getButtonStyle()}
             onClick={signUpHandler}
           >
             Register

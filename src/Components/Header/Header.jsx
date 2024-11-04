@@ -1,6 +1,7 @@
 import { setUser } from "@/redux/features/user/userSlice";
 import { useAppDispatch, useAppSelector } from "@/redux/hook";
 import { StoreToCookies } from "@/Utils/cookie";
+import { getButtonStyle } from "@/Utils/helper";
 import Link from "next/link";
 import React, { useEffect } from "react";
 
@@ -18,16 +19,13 @@ const Header = () => {
     dispatch(setUser(null));
   }
   return (
-    <div className="bg-slate-500">
+    <div className="bg-slate-700">
       <div className="max-w-pnc mx-auto py-4  text-white flex flex-row items-center justify-between">
         <div className="logo">PNC Jobs</div>
         <div className="menu">
           <ul className="flex flex-row items-center justify-between">
             <li className="mr-4">
-              <Link href="#">Home</Link>
-            </li>
-            <li className="mr-4">
-              <Link href="#">Home</Link>
+              <Link href="/">Home</Link>
             </li>
             <li className="mr-4">
               <Link href="/contests">Contests</Link>
@@ -59,15 +57,17 @@ const Header = () => {
               <li>Welcome <strong>{user.user.fname}</strong></li>
               <li>
                 <button
-                  className="px-4  py-2 rounded-md  bg-black text-white text-center"
+                  className={getButtonStyle('px-4')}
                   onClick={handleLogoutAction}
-                >Logout</button>
+                >
+                  Logout
+                </button>
               </li>
             </>
           ) : (
             <>
-              <li><button className="px-4  py-2 rounded-md  bg-black text-white text-center"><Link href='/login'>Login</Link></button></li>
-              <li><button className="px-4  py-2 rounded-md  bg-black text-white text-center"><Link href='/register'>Register</Link></button></li>
+              <li><button className={getButtonStyle('px-4')}><Link href='/login'>Login</Link></button></li>
+              <li><button className={getButtonStyle('px-4')}><Link href='/register'>Register</Link></button></li>
             </>
           )}
 
