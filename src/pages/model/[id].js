@@ -2,10 +2,14 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { getModelById } from "@/app/APIs/Models/Model"; // Ensure this import path is correct
+import React from "react";
+import SpinnerCustom from "@/Components/SpinnerCustom";
+import { getButtonStyle } from "@/Utils/helper";
 
 const ModelDetail = () => {
   const router = useRouter();
   const { id } = router.query; // Get the model ID from the URL
+  const [isLoading, setIsLoading] = useState(true)
   const [model, setModel] = useState(null);
   const [mode, setMode] = useState(""); // Track whether the user chooses practice or read mode
   const [currentPage, setCurrentPage] = useState(1);
@@ -35,6 +39,7 @@ const ModelDetail = () => {
           const data = await getModelById(id);
           setModel(data);
           setTimeLeft(data.totalTime * 60); // Set the countdown time in seconds if needed
+          setIsLoading(false)
         } catch (error) {
           console.error("Error fetching model details:", error);
         }
@@ -146,8 +151,8 @@ const ModelDetail = () => {
     }));
   };
 
-  if (!model) {
-    return <p>Loading...</p>; // Show loading state while fetching data
+  if (!model || isLoading) {
+    return <SpinnerCustom />; // Show loading state while fetching data
   }
 
   // Render based on mode selection
@@ -156,18 +161,18 @@ const ModelDetail = () => {
       <div className="p-6 bg-white border border-gray-200 rounded shadow-md">
         <h1 className="text-2xl font-bold">{model.name}</h1>
         <p className="mt-2 text-gray-600">{model.description}</p>
-        <div className="mt-6 flex flex-row space-x-4">
+        <div className="mt-4 flex space-x-4 justify-end">
           <button
             onClick={() => setMode("practice")}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 w-full"
+            className={getButtonStyle()}
           >
-            Practice Model Test
+            Practice
           </button>
           <button
             onClick={() => setMode("read")}
-            className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 w-full"
+            className="px-10 py-2 bg-green-500 hover:bg-green-600 text-white rounded-md shadow-md "
           >
-            Read Model Test
+            Read
           </button>
         </div>
       </div>

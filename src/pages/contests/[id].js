@@ -2,10 +2,14 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { getContestById } from "@/app/APIs/Contests/Contest"; // Ensure this import is correct
+import React from "react";
+import SpinnerCustom from "@/Components/SpinnerCustom";
+import { getButtonStyle, getInputStyle, getLabelStyle } from "@/Utils/helper";
 
 const ContestDetail = () => {
   const router = useRouter();
   const { id } = router.query; // Get the contest ID from the URL
+  const [isLoading, setIsLoading] = useState(true)
   const [contest, setContest] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [questionsPerPage, setQuestionsPerPage] = useState(1);
@@ -32,7 +36,8 @@ const ContestDetail = () => {
         try {
           const data = await getContestById(id);
           setContest(data);
-          setTimeLeft(data.totalTime * 60); // Set the countdown time in seconds
+          setTimeLeft((data?.totalTime || 1) * 60); // Set the countdown time in seconds
+          setIsLoading(false)
         } catch (error) {
           console.error("Error fetching contest details:", error);
         }
@@ -162,49 +167,55 @@ const ContestDetail = () => {
     setAnswersPage(1); // Reset to the first page when changing the number of answers per page
   };
 
-  if (!contest) {
-    return <p>Loading...</p>; // Show loading state while fetching data
+  if (isLoading || !contest) {
+    return <SpinnerCustom />; // Show loading state while fetching data
   }
+
 
   return (
     <div className="flex">
       {/* Main Content */}
       <div className="flex-1 p-6 bg-white border border-gray-200 rounded shadow-md">
-        <h1 className="text-2xl font-bold">{contest.name}</h1>
-        <p className="mt-2 text-gray-600">{contest.description}</p>
-        <div className="flex items-center justify-between mt-4">
-          <p className="text-gray-600">
-            Time Left:{" "}
-            <span
-              className={`font-bold ${
-                timeLeft <= 10 ? "text-red-500" : "text-green-600"
-              }`}
-            >
-              {formatTime(timeLeft)}
-            </span>
-          </p>
-          <label className="text-gray-700">
-            Questions per page:
-            <select
-              value={questionsPerPage}
-              onChange={(e) =>
-                handleQuestionsPerPageChange(Number(e.target.value))
-              }
-              className="ml-2 p-2 border border-gray-300 rounded"
-              disabled={isSubmitted}
-            >
-              {[1, 2, 3, 5].map((num) => (
-                <option key={num} value={num}>
-                  {num}
-                </option>
-              ))}
-            </select>
-          </label>
+        <div className="contest-title flex justify-between">
+          <div className="contest-title-desc">
+            <h1 className="text-2xl font-bold">{contest.name}</h1>
+            <p className="mt-2 text-gray-600">{contest.description}</p>
+          </div>
+          <div className="contest-timer">
+            <p className="text-gray-600 text-right">
+              <span
+                className={`font-bold text-xl ${timeLeft <= 10 ? "text-red-500" : "text-green-600"
+                  }`}
+              >
+                {formatTime(timeLeft)}
+              </span>
+            </p>
+            <div className="justify-between mt-4">
+              <div className="text-gray-700 gap-2 grid grid-cols-[1fr_auto] items-center">
+                <label className={getLabelStyle()}>Questions per page:</label>
+                <select
+                  value={questionsPerPage}
+                  onChange={(e) =>
+                    handleQuestionsPerPageChange(Number(e.target.value))
+                  }
+                  className={getInputStyle()}
+                  disabled={isSubmitted}
+                >
+                  {[1, 2, 3, 5].map((num) => (
+                    <option key={num} value={num}>
+                      {num}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+          </div>
         </div>
+
 
         {/* Display Questions */}
         {!isSubmitted && (
-          <ul className="mt-4 space-y-4">
+          <ul className="mt-10 space-y-4">
             {currentQuestions.map((question) => (
               <li
                 key={question._id}
@@ -214,17 +225,16 @@ const ContestDetail = () => {
                   <h3 className="text-lg font-semibold">{question.title}</h3>
                   <button
                     onClick={() => handleFlagQuestion(question._id)}
-                    className={`text-sm px-2 py-1 rounded ${
-                      flaggedQuestions[question._id]
+                    className={`text-sm px-2 py-1 rounded ${flaggedQuestions[question._id]
                         ? "bg-yellow-500 text-white"
                         : "bg-gray-300 text-black"
-                    }`}
+                      }`}
                   >
                     {flaggedQuestions[question._id] ? "Unflag" : "Flag"}
                   </button>
                 </div>
 
-                <ul className="pl-4 mt-2 space-y-2">
+                <ul className="mt-5 space-y-2">
                   {question.options.map((option) => {
                     const isSelected =
                       selectedAnswers[question._id] === option.order;
@@ -232,9 +242,8 @@ const ContestDetail = () => {
                     return (
                       <li
                         key={option._id}
-                        className={`p-2 border border-gray-200 rounded cursor-pointer hover:bg-gray-100 ${
-                          isSelected ? "bg-blue-100 border-blue-400" : ""
-                        }`}
+                        className={`px-4 p-2 border border-gray-200 rounded cursor-pointer hover:bg-gray-100 ${isSelected ? "bg-blue-100 border-blue-400" : ""
+                          }`}
                         onClick={() =>
                           handleSelectAnswer(question._id, option.order)
                         }
@@ -274,13 +283,16 @@ const ContestDetail = () => {
 
         {/* Submit Button */}
         {!isSubmitted && (
-          <button
-            onClick={handleSubmit}
-            disabled={isSubmitted || timeLeft === 0}
-            className="mt-6 w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
-          >
-            Submit
-          </button>
+          <div className="my-4 text-center">
+            <button
+              onClick={handleSubmit}
+              disabled={isSubmitted || timeLeft === 0}
+              className={getButtonStyle()}
+            >
+              Submit
+            </button>
+          </div>
+          
         )}
 
         {/* Show Score and Results After Submission */}
@@ -357,13 +369,12 @@ const ContestDetail = () => {
                       return (
                         <li
                           key={option._id}
-                          className={`p-2 border rounded ${
-                            isCorrect
+                          className={`p-2 border rounded ${isCorrect
                               ? "bg-green-100 border-green-400"
                               : isSelected && !isCorrect
-                              ? "bg-red-100 border-red-400"
-                              : "border-gray-200"
-                          }`}
+                                ? "bg-red-100 border-red-400"
+                                : "border-gray-200"
+                            }`}
                         >
                           {option.order}. {option.title}
                         </li>
@@ -389,15 +400,13 @@ const ContestDetail = () => {
             <button
               key={index + indexOfFirstNavItem}
               onClick={() => navigateToQuestion(index + indexOfFirstNavItem)}
-              className={`p-1 rounded ${
-                flaggedQuestions[contest.questions[index + indexOfFirstNavItem]._id]
+              className={`p-2 rounded ${flaggedQuestions[contest.questions[index + indexOfFirstNavItem]._id]
                   ? "bg-yellow-200"
                   : "bg-gray-100"
-              } border ${
-                index + 1 === currentPage
+                } border ${index + 1 === currentPage
                   ? "border-blue-500"
                   : "border-gray-300"
-              } hover:bg-gray-200 text-sm`}
+                } hover:bg-gray-200 text-sm`}
             >
               {index + 1 + indexOfFirstNavItem}
               {flaggedQuestions[contest.questions[index + indexOfFirstNavItem]._id] && (
