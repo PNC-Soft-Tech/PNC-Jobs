@@ -7,6 +7,7 @@ import { getButtonStyle, getInputStyle, getLabelStyle } from '@/Utils/helper';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify'
+import ToastCont from '../ToastCont';
 
 const LoginForm = () => {
   const router = useRouter()
@@ -24,7 +25,7 @@ const LoginForm = () => {
       console.log('login data: ', data)
       StoreToCookies.setUserToCookie(data?.data);
       dispatch(setUser(data?.data));
-      router.replace('/');
+      setTimeout(() => router.replace('/'), 3000);
     }
   }, [isSuccess]);
 
@@ -32,8 +33,6 @@ const LoginForm = () => {
     if (isError) {
       if ('data' in error && error.data) {
         const errorData = error.data;
-        // setErrorMsg(errorData.message);
-        // alert(errorData)
       } else {
         // setErrorMsg('An unknown error occurred');
         console.error('An unknown error occurred:', error);
@@ -44,23 +43,57 @@ const LoginForm = () => {
   const signInHandler = async (event) => {
     event.preventDefault();
 
+    const _body = {
+      data: {
+        identifier: email,
+        password: password,
+      },
+    }
+
+    toast.promise(
+      signIn(_body)
+        .then((res) => {
+          if (res.error) {
+            throw new Error(res?.error?.data?.message || 'Request failed')
+          }
+          return res
+        }),
+      {
+        pending: "Submitted. Please wait...",
+        success: {
+          render: ({ data }) => data.data.message
+        },
+        error: {
+          render: ({ data }) => {
+            console.log('error data: ', data)
+            return data.message || "Something w again."
+          }
+        },
+      }
+    ).then(() => {
+      // promise fullfilled
+    }).catch((error) => {
+      // toast.error(error?.res?.data?.message || )
+    })
+/*
     try {
-      const response = await signIn({
+      const res = await signIn({
         data: {
           identifier: email,
           password: password,
         },
       });
-      console.log('login res: ', response)
+      console.log('login res: ', res)
     } catch (error) {
       console.log('sigin error: ', error);
     }
-
+*/
     // console.log('user~signin', formData);
   };
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-md">
+      <ToastCont />
       <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
       <form>
         <div className="mb-4">

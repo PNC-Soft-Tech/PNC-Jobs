@@ -3,6 +3,8 @@ import { wrapper } from "@/redux/store";
 import React from "react";
 import { Provider } from "react-redux";
 
+import "react-toastify/dist/ReactToastify.css";
+
 
 const MyApp = ({ Component, pageProps }) => {
   const { store, props } = wrapper.useWrappedStore(pageProps)
