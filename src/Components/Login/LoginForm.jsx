@@ -64,31 +64,11 @@ const LoginForm = () => {
           render: ({ data }) => data.data.message
         },
         error: {
-          render: ({ data }) => {
-            console.log('error data: ', data)
-            return data.message || "Something w again."
-          }
+          render: ({ data }) => data.message || "Something went wrong. Please try again."
         },
       }
-    ).then(() => {
-      // promise fullfilled
-    }).catch((error) => {
-      // toast.error(error?.res?.data?.message || )
-    })
-/*
-    try {
-      const res = await signIn({
-        data: {
-          identifier: email,
-          password: password,
-        },
-      });
-      console.log('login res: ', res)
-    } catch (error) {
-      console.log('sigin error: ', error);
-    }
-*/
-    // console.log('user~signin', formData);
+    )
+    
   };
 
   return (

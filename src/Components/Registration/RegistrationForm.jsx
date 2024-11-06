@@ -6,6 +6,8 @@ import { StoreToCookies } from "@/Utils/cookie";
 import { getButtonStyle, getInputStyle, getLabelStyle, validateEmail } from "@/Utils/helper";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import ToastCont from "../ToastCont";
+import { toast } from "react-toastify";
 
 const RegistrationForm = () => {
   const router = useRouter()
@@ -40,7 +42,7 @@ const RegistrationForm = () => {
     if (isSuccess) {
       StoreToCookies.setUserToCookie(data?.data);
       dispatch(setUser(data?.data));
-      router.replace('/');
+      setTimeout(() => router.replace('/'), 3000);
     }
   }, [isSuccess])
   useEffect(() => {
@@ -80,34 +82,45 @@ const RegistrationForm = () => {
     }
 
     const body = {
-      username,
-      fname,
-      email,
-      institude,
-      phone,
-      div: division,
-      gender,
-      bloodGroup,
-      password,
-      address
+        data: {
+        username,
+        fname,
+        email,
+        institude,
+        phone,
+        div: division,
+        gender,
+        bloodGroup,
+        password,
+        address
+      },
     }
+    
     console.log('user signup body: ', body);
 
-    try {
-      await signUp({
-        data: body,
-      });
-      // setErrorMsg('');
-    } catch (error) {
-      console.log('signup error: ', error);
-    }
-
+    toast.promise(
+      signUp(body)
+        .then((res) => {
+          if (res.error) {
+            throw new Error(res?.error?.data?.message || 'Request failed')
+          }
+          return res
+        }),
+      {
+        pending: "Submitted. Please wait...",
+        success: {
+          render: ({ data }) => data.data.message
+        },
+        error: {
+          render: ({ data }) => data.message || "Something went wrong. Please try again."
+        },
+      }
+    )
   };
-
-  
   
   return (
     <div className="max-w-3xl mx-auto p-6 bg-white rounded-lg shadow-md">
+      <ToastCont />
       <h2 className="text-2xl font-bold text-center mb-6">Registration Form</h2>
       <form>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
